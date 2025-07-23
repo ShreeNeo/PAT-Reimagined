@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAT 2.0: Reimagined</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            scroll-snap-align: start;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            flex-direction: column;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero .subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero .tagline {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* Comparison Sections */
+        .comparison {
+            padding: 4rem 2rem;
+            background: #f8fafc;
+        }
+
+        .comparison:nth-child(even) {
+            background: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .comparison-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .comparison-header h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .comparison-header p {
+            font-size: 1.2rem;
+            color: #718096;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .before-after {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        .comparison-item {
+            text-align: center;
+        }
+
+        .comparison-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .comparison-item.before h3 {
+            color: #e53e3e;
+        }
+
+        .comparison-item.after h3 {
+            color: #38a169;
+        }
+
+        .image-container {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            margin-bottom: 1rem;
+            position: relative;
+            background: #f7fafc;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            min-height: 300px;
+            object-fit: cover;
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+
+        .badge.before {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .badge.after {
+            background: #c6f6d5;
+            color: #2f855a;
+        }
+
+        .badge.new-feature {
+            background: #c6f6d5;
+            color: #2f855a;
+        }
+
+        /* Features Section */
+        .features {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            color: white;
+            padding: 6rem 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Global Search & Announcement Sections */
+        .search-highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6rem 2rem;
+        }
+
+        .search-demo {
+            max-width: 800px;
+            margin: 3rem auto 0;
+            position: relative;
+        }
+
+        .search-mockup {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-results {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .search-result {
+            padding: 0.8rem;
+            background: #f7fafc;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: white;
+            text-align: center;
+            padding: 6rem 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-top: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .version-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #2d3748;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Print Styles for PDF */
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+                min-height: auto;
+            }
+        }
+
+        /* Placeholder styles for easy identification */
+        .placeholder-image {
+            background: linear-gradient(45deg, #f7fafc 25%, transparent 25%), 
+                        linear-gradient(-45deg, #f7fafc 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #f7fafc 75%), 
+                        linear-gradient(-45deg, transparent 75%, #f7fafc 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            border: 2px dashed #cbd5e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-weight: bold;
+            text-align: center;
+            min-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="version-badge">PAT 2.0: Reimagined</div>
+
+    <!-- Hero Section -->
+    <section class="section hero">
+        <div class="floating-elements">
+            <div class="floating-element" style="left: 10%; animation-delay: 0s;"></div>
+            <div class="floating-element" style="left: 20%; animation-delay: 1s;"></div>
+            <div class="floating-element" style="left: 30%; animation-delay: 2s;"></div>
+            <div class="floating-element" style="left: 40%; animation-delay: 3s;"></div>
+            <div class="floating-element" style="left: 50%; animation-delay: 4s;"></div>
+            <div class="floating-element" style="left: 60%; animation-delay: 5s;"></div>
+            <div class="floating-element" style="left: 70%; animation-delay: 2s;"></div>
+            <div class="floating-element" style="left: 80%; animation-delay: 1s;"></div>
+            <div class="floating-element" style="left: 90%; animation-delay: 3s;"></div>
+        </div>
+        <h1>PAT 2.0</h1>
+        <div class="subtitle">Reimagined</div>
+        <div class="tagline">The same powerful features you rely on, now with a stunning new interface and two exciting new features: Global Search and Announcement Preview.</div>
+        <div class="scroll-indicator">
+            <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">Scroll to explore</div>
+            <div style="font-size: 1.5rem;">↓</div>
+        </div>
+    </section>
+
+    <!-- Announcement Preview Feature -->
+    <section class="section comparison">
+        <div class="container">
+            <div class="comparison-header">
+                <h2>📢 NEW: Announcement Preview</h2>
+                <p>Stay informed with instant previews of latest major features and enhancements</p>
+            </div>
+            
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="image-container" style="background: #f8fafc; border: 2px solid #e2e8f0;">
+                    <!-- REPLACE WITH YOUR LOCAL IMAGE PATH -->
+                    <!-- Example: src="images/announcement-preview.png" -->
+                    <img src="https://raw.githubusercontent.com/ShreeNeo/PAT-Screenshots/refs/heads/main/Announcement.png" 
+                         alt="Announcement Preview Feature" 
+                         onerror="this.src='https://via.placeholder.com/800x400/f8fafc/667eea?text=ANNOUNCEMENT+PREVIEW+IMAGE+NOT+FOUND'"
+                         style="width: 100%; height: auto; object-fit: cover;">
+                    <div class="badge new-feature">NEW Feature</div>
+                </div>
+                
+                <!-- Feature Description -->
+                <div style="text-align: center; margin-top: 2rem; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                    <h3 style="color: #2d3748; margin-bottom: 1rem; font-size: 1.5rem;">Keep Your Team Updated</h3>
+                    <p style="color: #718096; font-size: 1.1rem; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+                        Never miss important updates! The new Announcement Preview provides instant access to information about the latest major features and enhancements, ensuring your team stays informed about platform improvements and new capabilities.
+                    </p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚀</div>
+                            <div style="font-weight: 600; color: #2d3748;">Major Features</div>
+                            <div style="color: #718096; font-size: 0.9rem;">Latest platform additions</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚡</div>
+                            <div style="font-weight: 600; color: #2d3748;">Enhancements</div>
+                            <div style="color: #718096; font-size: 0.9rem;">Improved functionality</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📱</div>
+                            <div style="font-weight: 600; color: #2d3748;">Quick Access</div>
+                            <div style="color: #718096; font-size: 0.9rem;">Instant information</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Transformation -->
+    <section class="section comparison">
+        <div class="container">
+            <div class="comparison-header">
+                <h2>Visual Transformation</h2>
+                <p>Same powerful login functionality, now with a modern, professional appearance</p>
+            </div>
+            <div class="before-after">
+                <div class="comparison-item before">
+                    <h3>Before: Functional Interface</h3>
+                    <div class="image-container">
+                        <!-- REPLACE WITH YOUR LOCAL IMAGE PATH -->
+                        <!-- Example: src="images/login-before.png" -->
+                        <img src="https://raw.githubusercontent.com/ShreeNeo/PAT-Screenshots/refs/heads/main/oldlogin.webp" 
+                             alt="Old Login Interface"
+                             onerror="this.src='https://via.placeholder.com/600x400/f0f0f0/666666?text=LOGIN+BEFORE+IMAGE+NOT+FOUND'">
+                        <div class="badge before">Old Design</div>
+                    </div>
+                    <p>Same login functionality with professional, modern visual design</p>
+                </div>
+                <div class="comparison-item after">
+                    <h3>After: Professional & Modern</h3>
+                    <div class="image-container">
+                        <!-- REPLACE WITH YOUR LOCAL IMAGE PATH -->
+                        <!-- Example: src="images/login-after.png" -->
+                        <img src="https://raw.githubusercontent.com/ShreeNeo/PAT-Screenshots/refs/heads/main/newlog.webp" 
+                             alt="New Login Interface"
+                             onerror="this.src='https://via.placeholder.com/600x400/1a202c/ffffff?text=LOGIN+AFTER+IMAGE+NOT+FOUND'">
+                        <div class="badge after">New Design</div>
+                    </div>
+                    <p>Enhanced visual appeal with feature highlights and modern interface</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Search Feature -->
+    <section class="section search-highlight">
+        <div class="container">
+            <div class="comparison-header">
+                <h2 style="color: white;">🔍 NEW: Global Search Feature</h2>
+                <p style="color: rgba(255,255,255,0.9);">The most requested feature is finally here - find anything, anywhere, instantly.</p>
+            </div>
+            
+            <div class="search-demo">
+                <div class="image-container" style="background: white; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+                    <!-- REPLACE WITH YOUR LOCAL IMAGE PATH -->
+                    <!-- Example: src="images/global-search.png" -->
+                    <img src="https://github.com/ShreeNeo/PAT-Screenshots/raw/refs/heads/main/globe.webp" 
+                         alt="Global Search Feature" 
+                         onerror="this.src='https://via.placeholder.com/800x500/ffffff/667eea?text=GLOBAL+SEARCH+IMAGE+NOT+FOUND'"
+                         style="width: 100%; height: auto; border-radius: 12px;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Drive Planner Enhancement -->
+    <section class="section comparison">
+        <div class="container">
+            <div class="comparison-header">
+                <h2>Drive Planner Visual Refresh</h2>
+                <p>Same comprehensive placement management tools, now with enhanced visual design and better user experience</p>
+            </div>
+            <div class="before-after">
+                <div class="comparison-item before">
+                    <h3>Before: Standard Calendar</h3>
+                    <div class="image-container">
+                        <!-- REPLACE WITH YOUR LOCAL IMAGE PATH -->
+                        <!-- Example: src="images/calendar-before.png" -->
+                        <img src="https://github.com/ShreeNeo/PAT-Screenshots/raw/refs/heads/main/oldplan.webp" 
+                             alt="Old Calendar View"
+                             onerror="this.src='https://via.placeholder.com/600x400/f7fafc/666666?text=CALENDAR+BEFORE+IMAGE+NOT+FOUND'">
+                        <div class="badge before">Previous</div>
+                    </div>
+                    <p>Same calendar functionality with enhanced visual design</p>
+                </div>
+                <div class="comparison-item after">
+                    <h3>After: Enhanced Visual Design</h3>
+                    <div class="image-container">
+                        <!-- REPLACE WITH YOUR LOCAL IMAGE PATH -->
+                        <!-- Example: src="images/calendar-after.png" -->
+                        <img src="https://github.com/ShreeNeo/PAT-Screenshots/raw/refs/heads/main/newplan.webp" 
+                             alt="New Calendar View"
+                             onerror="this.src='https://via.placeholder.com/600x400/1a202c/ffffff?text=CALENDAR+AFTER+IMAGE+NOT+FOUND'">
+                        <div class="badge after">Enhanced</div>
+                    </div>
+                    <p>Same powerful functionality with improved visual indicators and modern design</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Management -->
+    <section class="section comparison">
+        <div class="container">
+            <div class="comparison-header">
+                <h2>Enhanced Visual Data Management</h2>
+                <p>Same powerful data management capabilities with cleaner layouts and improved visual hierarchy</p>
+            </div>
+            <div class="before-after">
+                <div class="comparison-item before">
+                    <h3>Before: Functional Layout</h3>
+                    <div class="image-container">
+                        <!-- REPLACE WITH YOUR LOCAL IMAGE PATH -->
+                        <!-- Example: src="images/data-before.png" -->
+                        <img src="https://github.com/ShreeNeo/PAT-Screenshots/blob/main/oldlast.png?raw=true" 
+                             alt="Old Data Tables"
+                             onerror="this.src='https://via.placeholder.com/600x400/f7fafc/666666?text=DATA+BEFORE+IMAGE+NOT+FOUND'">
+                        <div class="badge before">Old Layout</div>
+                    </div>
+                    <p>Same data management functionality with basic visual presentation</p>
+                </div>
+                <div class="comparison-item after">
+                    <h3>After: Modern Data Presentation</h3>
+                    <div class="image-container">
+                        <!-- REPLACE WITH YOUR LOCAL IMAGE PATH -->
+                        <!-- Example: src="images/data-after.png" -->
+                        <img src="https://github.com/ShreeNeo/PAT-Screenshots/blob/main/newlast.png?raw=true" 
+                             alt="New Data Management"
+                             onerror="this.src='https://via.placeholder.com/600x400/2d3748/ffffff?text=DATA+AFTER+IMAGE+NOT+FOUND'">
+                        <div class="badge after">Reimagined</div>
+                    </div>
+                    <p>Same powerful tools with cleaner design and improved visual hierarchy</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features -->
+    <section class="section features">
+        <div class="container">
+            <div class="comparison-header">
+                <h2 style="color: white;">What's New in PAT 2.0</h2>
+                <p style="color: rgba(255,255,255,0.9);">Same powerful functionality, completely refreshed visual experience, plus two exciting new features</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Modern Design Language</h3>
+                    <p>Completely refreshed interface with improved typography, spacing, and visual hierarchy</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Enhanced Visual Performance</h3>
+                    <p>Smoother animations and improved visual feedback throughout the platform</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Better Visual Responsiveness</h3>
+                    <p>Improved visual design across all screen sizes and devices</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>NEW: Global Search</h3>
+                    <p>Brand new feature - find any student, drive, or module instantly from anywhere</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📢</div>
+                    <h3>NEW: Announcement Preview</h3>
+                    <p>Stay updated with instant previews of latest major features and enhancements</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Streamlined Visual Navigation</h3>
+                    <p>Same navigation structure with improved visual design and user experience</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="section cta">
+        <div class="container">
+            <h2 style="font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1rem;">Ready to Experience the New PAT 2.0?</h2>
+            <p style="font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin: 0 auto;">Same powerful functionality you trust, now with a stunning visual refresh plus Global Search and Announcement Preview features.</p>
+            <a href="https://app.neopat.ai/login" target="_blank" class="cta-button">Explore PAT 2.0 Now</a>
+            <div style="margin-top: 3rem; opacity: 0.7;">
+                <p>🚀 Available now for all existing PAT users</p>
+                <p>📞 Need help? Contact our support team</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Smooth scrolling and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.style.scrollBehavior = 'smooth';
+            
+            const floatingElements = document.querySelectorAll('.floating-element');
+            floatingElements.forEach((element, index) => {
+                element.style.left = Math.random() * 100 + '%';
+                element.style.top = Math.random() * 100 + '%';
+                element.style.animationDelay = Math.random() * 6 + 's';
+            });
+
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            if (scrollIndicator) {
+                scrollIndicator.addEventListener('click', function() {
+                    window.scrollTo({
+                        top: window.innerHeight,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
